@@ -1,14 +1,13 @@
 import re
 from datetime import datetime
-from check_formats import Format
+from check_formats import *
 from mysql.connector import Connect, IntegrityError, DataError
-cnx = Connect (username = '',
-               password = '',
+cnx = Connect (username = 'root',
+               password = 'amir1379',
                host = 'localhost',
                database = 'library')
 print ("Connected successfully")
 query = cnx.cursor()
-format = Format()
 class Users():
     def __init__ (self, f_name, l_name, age, b_date, tel, n_id, username, password):
         self.first_name = f_name
@@ -40,13 +39,13 @@ class Users():
                 duplicate_tel, duplicate_n_id, duplicate_username = True, True, True
                 while duplicate_tel == True and duplicate_n_id == True and duplicate_username == True:
                     if self.phone_number in unique_data[i]:
-                        self.phone_number = format.check_the_format_of_phone_number(input("One User had same phone number with you\nEnter it again: "))
+                        self.phone_number = check_the_format_of_phone_number(input("One User had same phone number with you\nEnter it again: "))
                         duplicate_tel = False
                     if self.national_id in unique_data[i]:
-                        self.national_id = format.check_the_format_of_n_id(input("One User found with this national id\nEnter it again: "))
+                        self.national_id = check_the_format_of_n_id(input("One User found with this national id\nEnter it again: "))
                         duplicate_n_id = False
                     if self.username in unique_data[i]:
-                        self.username = format.check_the_format_of_username(input("One User found with this username\nMake another one: "))
+                        self.username = check_the_format_of_username(input("One User found with this username\nMake another one: "))
                         duplicate_username = False
                     i += 1
             except DataError:
@@ -109,10 +108,10 @@ match main_parts:
                             age = today_year - b_year
                     else:
                         print ("Invalid date")
-                tel = format.check_the_format_of_phone_number (input("Please enter your Phone number: "))
-                n_id = format.check_the_format_of_n_id (input ("Please enter your National id: "))
-                username = format.check_the_format_of_username (input ("Please make your Username: "))
-                password = format.check_the_format_of_password (input  ("Please make your password: "))
+                tel = check_the_format_of_phone_number (input("Please enter your Phone number: "))
+                n_id = check_the_format_of_n_id (input ("Please enter your National id: "))
+                username = check_the_format_of_username (input ("Please make your Username: "))
+                password = check_the_format_of_password (input  ("Please make your password: "))
                 user = Users (f_name, l_name, age, b_date, tel, n_id, username, password)
                 user.create_an_account()
             case 2:
@@ -194,7 +193,7 @@ match main_parts:
                                 else:
                                     wrong_password_part = input("Incorrect password!\nDo you want to change your password if you forgot it(Yes/No): ")
                                     if wrong_password_part == 'Yes':
-                                        password = format.check_the_format_of_password(input("Enter your new password: "))
+                                        password = check_the_format_of_password(input("Enter your new password: "))
                                         query.execute('UPDATE users SET pass_w = \'%s\' WHERE username = \'%s\'' % (password, username))
                                         cnx.commit()
                                         print("\nYour password changed successfully")
